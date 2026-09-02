@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#ffd93d">
+<title>YeYeYeYe · P4 学习乐园</title>
+<style>
+:root{
+  --bg:#fff8e7; --ink:#33302b; --soft:#8a8272; --card:#ffffff; --line:#f0e6cf;
+  --en:#0f9b8e; --ma:#f5a623; --sc:#3cb371; --cl:#e2604a;
+  --star:#ffb703; --good:#2eaa6e; --bad:#e05252;
+  --shadow:0 6px 0 rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{margin:0;font-family:"Nunito","Arial Rounded MT Bold","PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--ink);overscroll-behavior:none;
+  background-image:radial-gradient(#ffe9a8 8%, transparent 9%),radial-gradient(#ffe9a8 8%, transparent 9%);
+  background-size:46px 46px;background-position:0 0,23px 23px;}
+#app{max-width:760px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;}
+/* ---------- top bar ---------- */
+.top{display:flex;align-items:center;gap:10px;padding:14px 16px 8px;}
+.top .logo{font-weight:900;font-size:1.35rem;letter-spacing:.5px;}
+.logo .c1{color:var(--en);}.logo .c2{color:var(--ma);}.logo .c3{color:var(--sc);}.logo .c4{color:var(--cl);}
+.starbox{margin-left:auto;background:#fff;border:2.5px solid var(--star);border-radius:99px;padding:5px 14px;font-weight:900;font-size:1.05rem;box-shadow:var(--shadow);}
+.starbox.pop{animation:pop .4s;}
+@keyframes pop{0%{transform:scale(1);}40%{transform:scale(1.35) rotate(-6deg);}100%{transform:scale(1);}}
+/* ---------- screens ---------- */
+.screen{flex:1;padding:8px 16px 96px;display:none;}
+.screen.show{display:block;animation:fadein .25s;}
+@keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+/* ---------- home ---------- */
+.mascot{display:flex;gap:12px;align-items:center;background:#fff;border-radius:20px;border:2.5px solid var(--line);padding:14px;box-shadow:var(--shadow);}
+.mascot .face{font-size:3rem;animation:bob 2.6s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-6px) rotate(4deg);}}
+.mascot .bubble{font-size:1rem;font-weight:800;line-height:1.5;}
+.mascot .bubble small{display:block;color:var(--soft);font-weight:700;}
+.ringwrap{display:flex;gap:14px;align-items:center;background:#fff;border-radius:20px;border:2.5px solid var(--line);padding:14px;margin-top:12px;box-shadow:var(--shadow);}
+.ring{width:86px;height:86px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(var(--star) calc(var(--p)*1%), #f1ead6 0);}
+.ring>div{width:64px;height:64px;border-radius:50%;background:#fff;display:grid;place-items:center;font-weight:900;font-size:1rem;}
+.ringtext{font-weight:800;line-height:1.6;}
+.ringtext small{color:var(--soft);font-weight:700;display:block;}
+.homebtns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+.bigbtn{border:none;border-radius:18px;padding:16px;font-size:1.02rem;font-weight:900;cursor:pointer;font-family:inherit;color:#fff;box-shadow:var(--shadow);transition:.1s transform;}
+.bigbtn:active{transform:scale(.94) rotate(-1deg);}
+.bigbtn.report{background:linear-gradient(135deg,#7c6cf0,#a58cf5);}
+.bigbtn.game{background:linear-gradient(135deg,#ff8a3d,#ffb703);}
+.bigbtn.eb{background:linear-gradient(135deg,#5aa9ff,#7cc4ff);}
+.bigbtn.io{background:#fff;color:var(--ink);border:2.5px solid var(--line);}
+.bigbtn:disabled{opacity:.45;transform:none;}
+/* ---------- subject module cards ---------- */
+.subjhead{display:flex;align-items:center;gap:10px;margin:8px 0 12px;}
+.subjhead .ic{font-size:2rem;}
+.subjhead h2{margin:0;font-size:1.25rem;font-weight:900;}
+.subjhead .sub{font-size:.78rem;color:var(--soft);font-weight:700;}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.mode-card{background:var(--card);border:2.5px solid var(--line);border-radius:18px;padding:14px;cursor:pointer;box-shadow:var(--shadow);transition:.12s transform;position:relative;overflow:hidden;}
+.mode-card:nth-child(odd){transform:rotate(-.6deg);}
+.mode-card:nth-child(even){transform:rotate(.6deg);}
+.mode-card:active{transform:scale(.93) rotate(0deg);}
+.mode-card .mi{font-size:1.9rem;}
+.mode-card .mt{font-weight:900;margin-top:6px;font-size:.98rem;}
+.mode-card .md{font-size:.74rem;color:var(--soft);margin-top:3px;line-height:1.45;font-weight:700;}
+.mode-card .stripe{position:absolute;top:0;left:0;right:0;height:6px;}
+/* ---------- quiz ---------- */
+.qwrap{background:#fff;border:2.5px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow);}
+.qtop{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--soft);font-weight:800;}
+.qtop .quit{margin-left:auto;background:none;border:none;font-size:1.1rem;cursor:pointer;}
+.bar{height:12px;background:#f1ead6;border-radius:99px;overflow:hidden;margin-top:8px;}
+.bar>div{height:100%;background:linear-gradient(90deg,var(--star),#ff8a3d);width:0%;transition:.35s;border-radius:99px;}
+.qtext{font-size:1.15rem;line-height:1.7;margin:14px 0;white-space:pre-wrap;font-weight:800;}
+.opts{display:grid;gap:10px;}
+.opt{background:#fffdf6;border:2.5px solid var(--line);border-radius:14px;padding:13px 15px;font-size:1.02rem;cursor:pointer;text-align:left;font-family:inherit;font-weight:800;transition:.1s transform;}
+.opt:active{transform:scale(.96);}
+.opt.correct{border-color:var(--good);background:#e9f9f0;animation:yay .35s;}
+.opt.wrong{border-color:var(--bad);background:#fdeeee;animation:shake .3s;}
+@keyframes yay{50%{transform:scale(1.04);}}
+@keyframes shake{25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
+input.ans,textarea.ans{width:100%;font-size:1.1rem;padding:12px;border:2.5px solid var(--line);border-radius:14px;font-family:inherit;font-weight:800;background:#fffdf6;}
+textarea.ans{min-height:84px;}
+.checkbtn{margin-top:10px;background:linear-gradient(135deg,var(--good),#4cc98a);color:#fff;border:none;border-radius:14px;padding:12px 22px;font-size:1rem;font-weight:900;cursor:pointer;font-family:inherit;box-shadow:var(--shadow);}
+.checkbtn:active{transform:scale(.95);}
+.fb{font-weight:900;margin-top:12px;display:none;font-size:1.05rem;}
+.fb.good{color:var(--good);}.fb.bad{color:var(--bad);}.fb.part{color:#c77700;}
+.explain{margin-top:10px;padding:12px;border-radius:14px;background:#fff6dd;font-size:.9rem;line-height:1.6;display:none;white-space:pre-wrap;font-weight:700;}
+.nextbtn{margin-top:14px;background:linear-gradient(135deg,#5aa9ff,#7cc4ff);color:#fff;border:none;border-radius:14px;padding:12px 26px;font-size:1rem;font-weight:900;cursor:pointer;font-family:inherit;display:none;box-shadow:var(--shadow);}
+.speak-btn{font-size:2.4rem;background:#fff6dd;border:3px solid var(--star);border-radius:50%;width:84px;height:84px;cursor:pointer;display:none;margin:4px auto 10px;transition:.1s transform;}
+.speak-btn:active{transform:scale(.9);}
+.tts-warn{display:none;background:#fff2cc;border:2px solid #e8c66a;border-radius:12px;padding:10px;font-size:.82rem;margin:10px 0;font-weight:700;line-height:1.5;}
+/* ---------- handwriting ---------- */
+.hwrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0 4px;}
+.hwbox{position:relative;}
+.hwbox canvas{background:#fff;border:2.5px solid #e0b7ae;border-radius:10px;touch-action:none;display:block;}
+.hwans{position:absolute;inset:0;display:none;place-items:center;font-size:74px;color:rgba(226,96,74,.5);font-family:"Kaiti SC","KaiTi","STKaiti",serif;pointer-events:none;font-weight:400;}
+.hwctrl{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap;}
+.hwctrl button{background:#fff;border:2.5px solid var(--line);border-radius:12px;padding:9px 14px;font-size:.9rem;font-weight:900;cursor:pointer;font-family:inherit;}
+.selfmark{display:none;gap:10px;justify-content:center;margin-top:12px;}
+.selfmark button{border:none;border-radius:14px;padding:12px 20px;font-size:1rem;font-weight:900;cursor:pointer;font-family:inherit;color:#fff;box-shadow:var(--shadow);}
+.selfmark .yes{background:var(--good);}
+.selfmark .no{background:var(--bad);}
+/* ---------- result ---------- */
+.resultcard{background:#fff;border:2.5px solid var(--line);border-radius:22px;padding:26px 18px;text-align:center;box-shadow:var(--shadow);}
+.resultcard .big{font-size:3rem;font-weight:900;}
+.resultcard .stars{font-size:1.6rem;margin:6px 0;}
+.resultcard .msg{font-weight:800;color:var(--soft);}
+/* ---------- report ---------- */
+.rep{background:#fff;border:2.5px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow);}
+.rep h3{margin:2px 0 12px;font-size:1.15rem;}
+.repbar{margin:10px 0;}
+.repbar .lab{display:flex;justify-content:space-between;font-size:.85rem;font-weight:900;margin-bottom:4px;}
+.repbar .track{height:16px;background:#f1ead6;border-radius:99px;overflow:hidden;}
+.repbar .fill{height:100%;width:0%;border-radius:99px;transition:width 1s cubic-bezier(.2,.8,.2,1);}
+.repnote{font-size:.85rem;font-weight:800;background:#fff6dd;border-radius:12px;padding:10px;margin-top:12px;line-height:1.6;}
+/* ---------- tabbar ---------- */
+.tabbar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2.5px solid var(--line);display:flex;max-width:760px;margin:0 auto;padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:50;}
+.tab{flex:1;background:none;border:none;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:14px;font-weight:900;color:var(--soft);font-size:.68rem;transition:.1s transform;}
+.tab .ti{font-size:1.5rem;transition:.15s transform;}
+.tab.active{color:var(--ink);}
+.tab.active .ti{transform:scale(1.22) translateY(-2px);}
+.tab:active{transform:scale(.9);}
+/* ---------- confetti & fx ---------- */
+.confetti{position:fixed;font-size:1.4rem;pointer-events:none;z-index:99;animation:conf .9s ease-out forwards;}
+@keyframes conf{to{transform:translate(var(--dx),var(--dy)) rotate(var(--rot));opacity:0;}}
+/* ---------- game ---------- */
+#gameOverlay{position:fixed;inset:0;background:rgba(20,16,8,.85);z-index:200;display:none;place-items:center;}
+#gameBox{width:min(94vw,560px);background:#fff8e7;border-radius:22px;padding:14px;text-align:center;}
+#gameBox h3{margin:4px 0 8px;}
+#gameCanvas{background:linear-gradient(#2b3a67,#4a3f78);border-radius:14px;touch-action:none;width:100%;display:block;}
+#gameBox .ginfo{display:flex;justify-content:space-between;font-weight:900;padding:6px 4px;}
+#gameBox button{margin-top:10px;}
+.pill{background:#fff;border:2.5px solid var(--line);border-radius:99px;padding:8px 18px;font-weight:900;cursor:pointer;font-family:inherit;font-size:.95rem;}
+@media(max-width:430px){.mode-grid{grid-template-columns:1fr 1fr;}.hwbox canvas{width:130px;height:130px;}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="logo"><span class="c1">Ye</span><span class="c2">Ye</span><span class="c3">Ye</span><span class="c4">Ye</span> <span style="font-size:.8rem;color:var(--soft);font-weight:800">P4 学习乐园</span></div>
+    <div class="starbox" id="starBox">⭐ <span id="starCount">0</span></div>
+  </div>
+
+  <!-- HOME -->
+  <div class="screen show" id="scr-home">
+    <div class="mascot"><div class="face">🦁</div><div class="bubble" id="mascotSay">你好呀！<small>今天也一起加油吧！</small></div></div>
+    <div class="ringwrap">
+      <div class="ring" id="goalRing" style="--p:0"><div id="goalPct">0%</div></div>
+      <div class="ringtext">今日任务：完成 <b id="goalTotal">20</b> 道题<small id="goalDone">已完成 0 题 · 做完解锁🎮和🏅报告</small></div>
+    </div>
+    <div class="homebtns">
+      <button class="bigbtn report" onclick="showReport()">🏅 今日报告</button>
+      <button class="bigbtn game" id="gameBtn" onclick="tryGame()">🎮 奖励游戏</button>
+      <button class="bigbtn eb" onclick="startErrorRound()">📕 错题闯关（<span id="ebCount">0</span>）</button>
+      <button class="bigbtn io" onclick="exportData()">💾 备份 / <span onclick="event.stopPropagation();document.getElementById('impFile').click()" style="text-decoration:underline">导入</span></button>
+      <input type="file" id="impFile" accept=".json" style="display:none" onchange="importData(this)">
+    </div>
+    <div class="tts-warn" id="ttsWarn">⚠️ 这台设备没有中文语音，听写会显示拼音提示。iPad：设置→辅助功能→朗读内容→声音→中文，下载语音包。</div>
+    <div id="reportArea"></div>
+  </div>
+
+  <!-- SUBJECT SCREENS -->
+  <div class="screen" id="scr-en"></div>
+  <div class="screen" id="scr-ma"></div>
+  <div class="screen" id="scr-sc"></div>
+  <div class="screen" id="scr-cl"></div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="scr-quiz">
+    <div class="qwrap">
+      <div class="qtop"><span id="qnum"></span><button class="quit" onclick="quitRound()">✖</button></div>
+      <div class="bar"><div id="barFill"></div></div>
+      <button class="speak-btn" id="speakBtn" onclick="speakCurrent()">🔊</button>
+      <div class="qtext" id="qtext"></div>
+      <div class="opts" id="opts"></div>
+      <div id="typedWrap" style="display:none">
+        <input class="ans" id="typedAns" autocomplete="off" placeholder="在这里输入答案">
+        <button class="checkbtn" onclick="submitTyped()">检查 ✔</button>
+      </div>
+      <div id="openWrap" style="display:none">
+        <textarea class="ans" id="openAns" placeholder="Answer in full sentences using science words"></textarea>
+        <button class="checkbtn" onclick="submitOpen()">Check my answer ✔</button>
+      </div>
+      <div id="hwWrap" style="display:none">
+        <div class="hwrow" id="hwRow"></div>
+        <div class="hwctrl">
+          <button onclick="hwClear()">🧽 重写</button>
+          <button onclick="hwReveal()">👀 对答案</button>
+        </div>
+        <div class="selfmark" id="selfMark">
+          <button class="yes" onclick="hwMark(true)">✓ 我写对了</button>
+          <button class="no" onclick="hwMark(false)">✗ 有错字</button>
+        </div>
+      </div>
+      <div class="fb" id="fb"></div>
+      <div class="explain" id="explain"></div>
+      <button class="nextbtn" id="nextBtn" onclick="nextQ()">下一题 →</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="scr-done"></div>
+
+  <div class="tabbar">
+    <button class="tab active" data-scr="home" onclick="go('home')"><span class="ti">🏠</span>今日</button>
+    <button class="tab" data-scr="en" onclick="go('en')"><span class="ti">📖</span>English</button>
+    <button class="tab" data-scr="ma" onclick="go('ma')"><span class="ti">➗</span>Maths</button>
+    <button class="tab" data-scr="sc" onclick="go('sc')"><span class="ti">🔬</span>Science</button>
+    <button class="tab" data-scr="cl" onclick="go('cl')"><span class="ti">✍️</span>华文</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="gameOverlay">
+  <div id="gameBox">
+    <h3>🌟 接星星 · 奖励关</h3>
+    <div class="ginfo"><span>得分 <b id="gScore">0</b></span><span>⏱ <b id="gTime">30</b>s</span></div>
+    <canvas id="gameCanvas" width="520" height="380"></canvas>
+    <div style="font-size:.8rem;font-weight:800;color:#6b6250;margin-top:6px">点⭐得分，别点💣！游戏得分会变成星星奖励～</div>
+    <button class="pill" id="gBtn" onclick="gameStart()">开始！</button>
+    <button class="pill" onclick="gameClose()">返回</button>
+  </div>
+</div>
+
+<script data-core>
+
+// ================= CORE (DOM-free, testable) =================
+var MA_CORE=(function(){
+  function ri(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+  function pick(arr){return arr[ri(0,arr.length-1)];}
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=ri(0,i),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function gcd(a,b){return b?gcd(b,a%b):a;}
+  function uniqOpts(correct, wrongs){
+    var set=[String(correct)];
+    wrongs.forEach(function(w){ w=String(w); if(set.indexOf(w)===-1) set.push(w); });
+    while(set.length<4){ var extra=String(Number(correct)+ri(1,9)*(Math.random()<.5?-1:1)); if(set.indexOf(extra)===-1 && Number(extra)>=0) set.push(extra); }
+    return shuffle(set.slice(0,4));
+  }
+  // Build exactly 4 UNIQUE options; filler(i) supplies extra distractors on collision
+  function uniq4(correct, wrongs, filler){
+    var set=[String(correct)];
+    wrongs.forEach(function(w){ w=String(w); if(set.indexOf(w)===-1) set.push(w); });
+    for(var i=1;set.length<4&&i<60;i++){ var f=String(filler(i)); if(set.indexOf(f)===-1) set.push(f); }
+    return shuffle(set.slice(0,4));
+  }
+
+  // ---- Generator: Number Sense (place value, rounding, factors & multiples) ----
+  function genNumber(){
+    var kind=ri(1,4);
+    if(kind===1){ // place value up to 100,000
+      var n=ri(10000,99999);
+      var digits=String(n).split('');
+      var pos=ri(0,4);
+      var names=["ten thousands","thousands","hundreds","tens","ones"];
+      var vals=[10000,1000,100,10,1];
+      var d=Number(digits[pos]);
+      var correct=d*vals[pos];
+      return {type:"mcq", q:"In the number "+n.toLocaleString('en-US')+", what is the VALUE of the digit "+d+" in the "+names[pos]+" place?",
+        options:uniqOpts(correct,[d, d*vals[Math.max(0,pos-1)], d*vals[Math.min(4,pos+1)]]),
+        answer:String(correct),
+        explain:"The digit "+d+" is in the "+names[pos]+" place, so its value is "+d+" × "+vals[pos].toLocaleString('en-US')+" = "+correct.toLocaleString('en-US')+"."};
+    }
+    if(kind===2){ // rounding
+      var n2=ri(1234,98765);
+      var to=pick([10,100,1000]);
+      var correct2=Math.round(n2/to)*to;
+      return {type:"mcq", q:"Round "+n2.toLocaleString('en-US')+" to the nearest "+to.toLocaleString('en-US')+".",
+        options:uniqOpts(correct2,[correct2+to,correct2-to,Math.floor(n2/to)*to===correct2?correct2+2*to:Math.floor(n2/to)*to]),
+        answer:String(correct2),
+        explain:"Look at the digit to the right of the "+(to===10?"tens":to===100?"hundreds":"thousands")+" place. 5 or more → round up; 4 or less → round down. Answer: "+correct2.toLocaleString('en-US')+"."};
+    }
+    if(kind===3){ // factors
+      var base=pick([24,36,48,60,72,84,96]);
+      var facs=[]; for(var f=1;f<=base;f++) if(base%f===0) facs.push(f);
+      var notFac=ri(2,12); while(base%notFac===0) notFac=ri(2,13);
+      var opts=shuffle([String(notFac)].concat(shuffle(facs.filter(function(x){return x>1&&x<base;})).slice(0,3).map(String)));
+      return {type:"mcq", q:"Which of the following is NOT a factor of "+base+"?",
+        options:opts, answer:String(notFac),
+        explain:base+" ÷ "+notFac+" leaves a remainder, so "+notFac+" is not a factor. Factors of "+base+": "+facs.join(", ")+"."};
+    }
+    // multiples: common multiple
+    var a=pick([2,3,4,5,6]), b=pick([3,4,5,6,8]); while(b===a) b=pick([3,4,5,6,8]);
+    var lcm=a*b/gcd(a,b);
+    var k=ri(1,3); var correct3=lcm*k;
+    return {type:"mcq", q:"Which number is a common multiple of "+a+" and "+b+"?",
+      options:uniqOpts(correct3,[a*ri(1,9)===correct3?a*7+1:a* ri(1,9), b* ri(1,9)===correct3?b*7+1:b*ri(1,9), correct3+1]),
+      answer:String(correct3),
+      explain:"A common multiple must be divisible by both "+a+" and "+b+". "+correct3+" ÷ "+a+" = "+(correct3/a)+" and "+correct3+" ÷ "+b+" = "+(correct3/b)+"."};
+  }
+
+  // ---- Generator: Fractions (P4: like & related denominators, mixed numbers, fraction of set) ----
+  function fstr(n,d){return n+"/"+d;}
+  function genFraction(){
+    var kind=ri(1,4);
+    if(kind===1){ // equivalent fraction
+      var d=pick([2,3,4,5,6]), n=ri(1,d-1); var g=gcd(n,d); n/=g; d/=g;
+      var m=ri(2,5);
+      var correct=fstr(n*m,d*m);
+      return {type:"mcq", q:"Which fraction is equivalent to "+fstr(n,d)+"?",
+        options:uniq4(correct, [fstr(n+m,d+m), fstr(n*m, d*(m+1)), fstr(n, d*m)], function(i){return fstr(n*m+i, d*m);}),
+        answer:correct,
+        explain:"Multiply the numerator and denominator by the SAME number: "+n+"×"+m+"="+(n*m)+", "+d+"×"+m+"="+(d*m)+". Adding the same number to top and bottom (like "+fstr(n+m,d+m)+") is the classic trap!"};
+    }
+    if(kind===2){ // mixed <-> improper
+      var w=ri(1,4), d2=pick([3,4,5,6,8]), n2=ri(1,d2-1);
+      var imp=w*d2+n2;
+      if(Math.random()<.5){
+        return {type:"mcq", q:"Express "+w+" "+fstr(n2,d2)+" as an improper fraction.",
+          options:uniq4(fstr(imp,d2), [fstr(w+n2,d2), fstr(w*n2,d2), fstr(imp+1,d2)], function(i){return fstr(imp+1+i,d2);}),
+          answer:fstr(imp,d2),
+          explain:"Whole × denominator + numerator: "+w+"×"+d2+"+"+n2+" = "+imp+". So "+fstr(imp,d2)+"."};
+      }
+      return {type:"mcq", q:"Express "+fstr(imp,d2)+" as a mixed number.",
+        options:uniq4(w+" "+fstr(n2,d2), [(w+1)+" "+fstr(n2,d2), w+" "+fstr(d2-n2,d2), n2+" "+fstr(w,d2)], function(i){return (w+1+i)+" "+fstr(n2,d2);}),
+        answer:w+" "+fstr(n2,d2),
+        explain:imp+" ÷ "+d2+" = "+w+" remainder "+n2+", so "+fstr(imp,d2)+" = "+w+" "+fstr(n2,d2)+"."};
+    }
+    if(kind===3){ // add/sub related fractions (one denominator multiple of other)
+      var dSmall=pick([2,3,4,5,6]), mult=pick([2,3]); var dBig=dSmall*mult;
+      var n3=ri(1,dSmall-1), n4=ri(1,dBig-1);
+      var add=Math.random()<.6;
+      var top = add? n3*mult+n4 : n3*mult-n4;
+      if(!add && top<=0){ add=true; top=n3*mult+n4; }
+      if(add && top>=dBig){ // keep proper for P4 comfort
+        top=n3*mult-n4; add=false; if(top<=0){ n4=1; top=n3*mult-1; if(top<=0){n3=dSmall-1; top=n3*mult-1;} }
+      }
+      var g3=gcd(top,dBig); var simpTop=top/g3, simpD=dBig/g3;
+      var correct4 = simpD===1? String(simpTop) : fstr(simpTop,simpD);
+      var raw = fstr(top,dBig);
+      var wrongA = add? fstr(n3+n4, dSmall+dBig) : fstr(Math.abs(n3-n4), dBig-dSmall===0?dBig+1:Math.abs(dBig-dSmall));
+      return {type:"mcq", q:"Find "+fstr(n3,dSmall)+(add?" + ":" − ")+fstr(n4,dBig)+". Give your answer in the simplest form.",
+        options:uniq4(correct4, [wrongA, (raw!==correct4?raw:fstr(top+1,dBig)), fstr(simpTop, simpD+1)], function(i){return fstr(simpTop+i, simpD);}),
+        answer:correct4,
+        explain:"Make the denominators the same first: "+fstr(n3,dSmall)+" = "+fstr(n3*mult,dBig)+". Then "+(add?fstr(n3*mult,dBig)+" + "+fstr(n4,dBig):fstr(n3*mult,dBig)+" − "+fstr(n4,dBig))+" = "+raw+(raw!==correct4?" = "+correct4+" (simplified)":"")+". Never add denominators!"};
+    }
+    // fraction of a set
+    var d5=pick([3,4,5,6,8]), n5=ri(1,d5-1), unit=ri(2,9), total=d5*unit;
+    var correct5=n5*unit;
+    return {type:"typed", q:"There are "+total+" marbles in a box. "+fstr(n5,d5)+" of them are red. How many red marbles are there?",
+      answer:String(correct5),
+      explain:total+" ÷ "+d5+" = "+unit+" (one unit). "+n5+" units = "+n5+" × "+unit+" = "+correct5+" red marbles.",
+      hint:"Model: split "+total+" into "+d5+" equal units. Red = "+n5+" units."};
+  }
+
+  // ---- Generator: Decimals (up to 3 dp, compare, +/−, × 1-digit) ----
+  function dec(n,dp){return (Math.round(n*Math.pow(10,dp))/Math.pow(10,dp));}
+  function genDecimal(){
+    var kind=ri(1,4);
+    if(kind===1){ // place value in decimals
+      var whole=ri(1,9), t=ri(1,9), h=ri(1,9), th=ri(1,9);
+      var num=whole+"."+t+h+th;
+      var which=pick([["tenths",t,"0."+t],["hundredths",h,"0.0"+h],["thousandths",th,"0.00"+th]]);
+      return {type:"mcq", q:"In "+num+", what is the value of the digit "+which[1]+" in the "+which[0]+" place?",
+        options:shuffle([which[2], String(which[1]), "0."+which[1]===which[2]?"0.0"+which[1]:"0."+which[1], which[0]==="thousandths"?"0.0"+which[1]:"0.00"+which[1]]),
+        answer:which[2],
+        explain:"The "+which[0]+" place: digit "+which[1]+" has the value "+which[2]+"."};
+    }
+    if(kind===2){ // compare / order
+      var a=dec(ri(10,99)/10 + ri(0,9)/100,2), b=dec(a + pick([0.01,0.1,-0.01,-0.1,0.09,-0.09]),2);
+      if(a===b) b=dec(b+0.02,2);
+      var big=Math.max(a,b), c=dec(Math.min(a,b)-0.05,2);
+      var correct6=big.toFixed(2);
+      return {type:"mcq", q:"Which is the GREATEST: "+a.toFixed(2)+", "+b.toFixed(2)+" or "+c.toFixed(2)+"?",
+        options:uniq4(correct6, [a.toFixed(2),b.toFixed(2),c.toFixed(2)].filter(function(x){return x!==correct6;}), function(i){return dec(big-0.01*i-0.02,2).toFixed(2);}),
+        answer:correct6,
+        explain:"Compare digit by digit from the left: ones, then tenths, then hundredths. Greatest is "+correct6+"."};
+    }
+    if(kind===3){ // add/sub
+      var x=dec(ri(100,999)/100,2), y=dec(ri(100,999)/100,2);
+      var add2=Math.random()<.5;
+      var res= add2? dec(x+y,2) : dec(Math.abs(x-y),2);
+      var qs= add2? x.toFixed(2)+" + "+y.toFixed(2) : Math.max(x,y).toFixed(2)+" − "+Math.min(x,y).toFixed(2);
+      return {type:"typed", q:"Find "+qs+".", answer:res.toFixed(2).replace(/\.?0+$/,''),
+        answerAlts:[res.toFixed(2), String(res)],
+        explain:qs+" = "+res.toFixed(2)+". Line up the decimal points before adding or subtracting!"};
+    }
+    var m2=dec(ri(11,99)/10,1), k2=ri(2,9);
+    var res2=dec(m2*k2,1);
+    return {type:"typed", q:"Find "+m2.toFixed(1)+" × "+k2+".", answer:String(res2).replace(/\.?0+$/,''),
+      answerAlts:[res2.toFixed(1), String(res2)],
+      explain:m2.toFixed(1)+" × "+k2+": think "+Math.round(m2*10)+" × "+k2+" = "+(Math.round(m2*10)*k2)+", then place the decimal point back → "+res2+"."};
+  }
+
+  // ---- Curated: Geometry & Data (angles, symmetry, nets, area/perimeter, tables/graphs) ----
+  var GEO=[
+    {type:"mcq",q:"An angle that is smaller than 90° is called a(n) ___.",options:["acute angle","obtuse angle","right angle","reflex angle"],answer:"acute angle",explain:"Acute < 90°, right = 90°, obtuse is between 90° and 180°."},
+    {type:"mcq",q:"A square piece of paper is folded in half along a line of symmetry. Which of these CANNOT be the fold line?",options:["a diagonal from corner to corner","a line joining midpoints of opposite sides","a line joining a corner to the midpoint of a side","(a square has 4 lines of symmetry)"],answer:"a line joining a corner to the midpoint of a side",explain:"A square's 4 lines of symmetry: 2 diagonals + 2 lines through midpoints of opposite sides. Corner-to-midpoint is not one of them."},
+    {type:"mcq",q:"Which of these is a net of a cube?",options:["a cross shape made of 6 squares","a row of 4 squares only","an L-shape made of 5 squares","a 2×3 rectangle of 6 squares"],answer:"a cross shape made of 6 squares",explain:"A cube needs 6 square faces arranged so they can fold up without overlapping. The cross (T/plus) shape works; a 2×3 block overlaps when folded."},
+    {type:"mcq",q:"A rectangle has a length of 12 cm and a breadth of 7 cm. What is its perimeter?",options:["38 cm","19 cm","84 cm","26 cm"],answer:"38 cm",explain:"Perimeter = 2 × (12 + 7) = 2 × 19 = 38 cm. (84 is the AREA — classic trap!)"},
+    {type:"mcq",q:"The area of a square is 64 cm². What is the length of one side?",options:["8 cm","16 cm","32 cm","4 cm"],answer:"8 cm",explain:"Side × side = 64, so side = 8 cm (because 8 × 8 = 64)."},
+    {type:"mcq",q:"How many right angles does a complete turn contain?",options:["4","2","3","8"],answer:"4",explain:"A complete turn = 360° = 4 × 90° = 4 right angles."},
+    {type:"mcq",q:"In a pie chart of 40 pupils' favourite fruit, the sector for apples is a quarter of the circle. How many pupils chose apples?",options:["10","4","20","14"],answer:"10",explain:"A quarter of the whole = 40 ÷ 4 = 10 pupils. Pie charts show parts of a whole."},
+    {type:"mcq",q:"A rectangle and a square have the same perimeter of 24 cm. The rectangle is 8 cm long. Which has the bigger area?",options:["the square","the rectangle","both the same","cannot tell"],answer:"the square",explain:"Square side = 24÷4 = 6, area 36 cm². Rectangle: 8 + b = 12, b = 4, area 32 cm². For the same perimeter, the square always wins."},
+    {type:"mcq",q:"Which angle is an obtuse angle?",options:["135°","90°","89°","181°"],answer:"135°",explain:"Obtuse: bigger than 90° but smaller than 180°. 135° fits."},
+    {type:"mcq",q:"A figure has rotational order 1 and no line of symmetry. Which could it be?",options:["the letter F","the letter H","the letter O","the letter X"],answer:"the letter F",explain:"H, O, X all have lines of symmetry. F has none — it looks different in the mirror."}
+  ];
+
+  // ---- Curated: Word Problems (two-step, top-school style, typed) ----
+  var WP=[
+    {type:"typed",q:"Mrs Tan baked 456 cookies. She sold 3/8 of them in the morning and 148 in the afternoon. How many cookies did she have left?",answer:"137",explain:"3/8 × 456 = 171 sold in the morning. 456 − 171 − 148 = 137 left.",hint:"Model: 8 units = 456 → 1 unit = 57. Morning = 3 units."},
+    {type:"typed",q:"A shop sold 1,248 pens in January. It sold twice as many pens in February as in January. How many pens did it sell in the two months altogether?",answer:"3744",answerAlts:["3,744"],explain:"February = 2 × 1,248 = 2,496. Total = 1,248 + 2,496 = 3,744.",hint:"Model: Jan = 1 unit, Feb = 2 units, total = 3 units."},
+    {type:"typed",q:"Ali had $50. He bought 3 books at $8.90 each and a pen at $2.35. How much money had he left?",answer:"20.95",answerAlts:["$20.95"],explain:"3 × $8.90 = $26.70. $26.70 + $2.35 = $29.05 spent. $50 − $29.05 = $20.95.",hint:"Step 1: total spent. Step 2: subtract from $50."},
+    {type:"typed",q:"A ribbon 5 m long is cut into pieces of 3/10 m each. What is the greatest number of such pieces that can be cut?",answer:"16",explain:"5 ÷ 3/10 → 5 m = 50/10 m. 50 ÷ 3 = 16 remainder 2, so 16 full pieces (with 2/10 m left over).",hint:"Change 5 m into tenths first: 50 tenths."},
+    {type:"typed",q:"Siti and Devi have 96 stickers altogether. Siti has 3 times as many stickers as Devi. How many more stickers does Siti have than Devi?",answer:"48",explain:"4 units = 96 → 1 unit = 24. Siti = 72, Devi = 24. Difference = 72 − 24 = 48 (that's 2 units).",hint:"Model: Devi = 1 unit, Siti = 3 units."},
+    {type:"typed",q:"A baker packs 2,750 buns equally into boxes of 8. How many buns are left unpacked?",answer:"6",explain:"2,750 ÷ 8 = 343 remainder 6. So 6 buns are left unpacked.",hint:"Do the division and look at the REMAINDER, not the quotient."},
+    {type:"typed",q:"Mr Lim is 38 years old. His son is 29 years younger. In how many years' time will Mr Lim be exactly 3 times as old as his son?",answer:"5.5",answerAlts:["5.5 years","11/2"],explain:"Son is 9 now. Let it be n years later: 38+n = 3×(9+n) → 38+n = 27+3n → 2n = 11 → n = 5.5. Check: at 43.5 and 14.5. (Challenge question — GEP/HAL flavour!)",hint:"Try the 'guess and check' table, or think: the age GAP (29) never changes. When Dad is 3 times as old, the gap = 2 units, so 1 unit = 14.5."},
+    {type:"typed",q:"A rectangular field is 45 m long and 30 m wide. Zed jogs round it 4 times. How far does he jog in metres?",answer:"600",explain:"Perimeter = 2 × (45+30) = 150 m. 4 rounds = 4 × 150 = 600 m.",hint:"Round the field = perimeter, not area."}
+  ];
+
+  var MODULES={
+    number:{name:"Number Sense",gen:genNumber,n:8},
+    fraction:{name:"Fractions",gen:genFraction,n:8},
+    decimal:{name:"Decimals",gen:genDecimal,n:8},
+    geometry:{name:"Geometry & Data",bank:GEO,n:8},
+    word:{name:"Word Problems",bank:WP,n:6}
+  };
+
+  function buildRound(modId){
+    var m=MODULES[modId], out=[];
+    if(m.gen){ for(var i=0;i<m.n;i++) out.push(m.gen()); }
+    else { out=shuffle(m.bank).slice(0,m.n); }
+    return out;
+  }
+  function normalize(s){return String(s).trim().toLowerCase().replace(/[$,\s]/g,'').replace(/^0+(\d)/,'$1');}
+  function checkTyped(q, given){
+    var g=normalize(given);
+    if(g===normalize(q.answer)) return true;
+    if(q.answerAlts && q.answerAlts.some(function(a){return normalize(a)===g;})) return true;
+    // numeric equivalence
+    var gn=parseFloat(g), an=parseFloat(normalize(q.answer));
+    if(!isNaN(gn)&&!isNaN(an)&&Math.abs(gn-an)<1e-9) return true;
+    return false;
+  }
+  return {MODULES:MODULES, buildRound:buildRound, checkTyped:checkTyped, shuffle:shuffle};
+})();
+
+
+var EN_CORE=(function(){
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+  // ---- Grammar MCQ ----
+  var GRAMMAR=[
+    {type:"mcq",q:"Neither the boys nor their teacher ___ able to open the locked door.",options:["was","were","are","have been"],answer:"was",explain:"With 'neither…nor', the verb agrees with the noun NEAREST to it — 'teacher' (singular) → was."},
+    {type:"mcq",q:"Every one of the pupils ___ handed in the worksheet.",options:["has","have","are","were"],answer:"has",explain:"'Every one' is singular, so use 'has'. Don't be tricked by 'pupils'!"},
+    {type:"mcq",q:"By the time we reached the stadium, the match ___ already started.",options:["had","has","have","was"],answer:"had",explain:"Two past actions — the earlier one takes the past perfect: 'had started'."},
+    {type:"mcq",q:"The pupils, together with their teacher, ___ visiting the Science Centre tomorrow.",options:["are","is","was","be"],answer:"are",explain:"The subject is 'the pupils' (plural). The phrase 'together with their teacher' is extra information and does not change the verb."},
+    {type:"mcq",q:"Zed ___ his homework when the lights suddenly went out.",options:["was doing","is doing","did","does"],answer:"was doing",explain:"An action in progress interrupted by another past action → past continuous 'was doing'."},
+    {type:"mcq",q:"You may play outside ___ you finish your revision first.",options:["provided that","despite","however","therefore"],answer:"provided that",explain:"'Provided that' = on the condition that. The others don't show a condition."},
+    {type:"mcq",q:"The cat hid ___ the sofa when it heard the thunder.",options:["under","among","between","along"],answer:"under",explain:"A cat hides UNDER a sofa. 'Between' needs two things; 'among' needs three or more."},
+    {type:"mcq",q:"'Whose water bottle is this?' 'It is ___.'",options:["hers","her","she","her's"],answer:"hers",explain:"Possessive pronoun standing alone: hers. ('Her's' is never correct.)"},
+    {type:"mcq",q:"Hardly ___ sat down when the phone rang.",options:["had I","I had","did I","I have"],answer:"had I",explain:"After 'Hardly' at the start, we invert: 'Hardly had I sat down…' (challenge question!)"},
+    {type:"mcq",q:"Each of the twins ___ a different hobby.",options:["has","have","are having","were having"],answer:"has",explain:"'Each' is always singular → has."},
+    {type:"mcq",q:"The teacher asked us ___ we had completed our project.",options:["whether","weather","unless","despite"],answer:"whether",explain:"Reported yes/no question → 'whether'. 'Weather' is rain and sunshine!"},
+    {type:"mcq",q:"There ___ a bowl of grapes and two apples on the table.",options:["is","are","were","have"],answer:"is",explain:"With 'there is/are', the verb agrees with the FIRST noun after it — 'a bowl' (singular) → is."},
+    {type:"mcq",q:"My brother, as well as my parents, ___ fond of durians.",options:["is","are","were","be"],answer:"is",explain:"'As well as' does not make the subject plural. Subject = 'my brother' → is."},
+    {type:"mcq",q:"Sarah has been learning ballet ___ she was five years old.",options:["since","for","until","by"],answer:"since",explain:"'Since' + a point in time (when she was five). 'For' + a length of time (for five years)."},
+    {type:"mcq",q:"Not only ___ the piano, but she also composes her own songs.",options:["does she play","she plays","she does play","plays she"],answer:"does she play",explain:"'Not only' at the start triggers inversion: 'Not only does she play…' (challenge question!)"}
+  ];
+
+  // ---- Vocabulary MCQ ----
+  var VOCAB=[
+    {type:"mcq",q:"The mischievous monkey ___ the tourist's sunglasses and scampered up the tree.",options:["snatched","donated","admired","polished"],answer:"snatched",explain:"'Snatched' = grabbed quickly, which fits a cheeky monkey."},
+    {type:"mcq",q:"The old bridge looked so ___ that we did not dare to cross it.",options:["rickety","sturdy","spacious","gleaming"],answer:"rickety",explain:"'Rickety' = shaky and likely to break. 'Sturdy' is the opposite."},
+    {type:"mcq",q:"Ben was ___ when his painting won first prize; he had not expected it at all.",options:["astonished","furious","exhausted","jealous"],answer:"astonished",explain:"'Astonished' = very surprised, matching 'had not expected it'."},
+    {type:"mcq",q:"The scent of the flowers ___ the whole garden.",options:["filled","poured","splashed","emptied"],answer:"filled",explain:"A scent FILLS a place — a common collocation."},
+    {type:"mcq",q:"The hikers were ___ by the sudden downpour and ran for shelter.",options:["drenched","ironed","toasted","sprinkled"],answer:"drenched",explain:"'Drenched' = completely soaked. A downpour is heavy rain."},
+    {type:"mcq",q:"Try not to ___ your little sister — she is doing her best.",options:["belittle","bewilder","befriend","behold"],answer:"belittle",explain:"'Belittle' = make someone feel small or unimportant."},
+    {type:"mcq",q:"The detective examined the room for clues, leaving no stone ___.",options:["unturned","unbroken","untouched","unpainted"],answer:"unturned",explain:"Idiom: 'leave no stone unturned' = search everywhere."},
+    {type:"mcq",q:"The naughty puppy ___ the newspaper to shreds.",options:["tore","folded","delivered","read"],answer:"tore",explain:"'Tore ... to shreds' = ripped into small pieces."},
+    {type:"mcq",q:"Grandmother's stories always hold us ___; we listen without moving.",options:["spellbound","upside-down","waterproof","overdue"],answer:"spellbound",explain:"'Spellbound' = so interested you cannot look away."},
+    {type:"mcq",q:"The two brothers are like chalk and ___ — one is quiet, the other talks non-stop.",options:["cheese","chocolate","charcoal","chilli"],answer:"cheese",explain:"Idiom: 'like chalk and cheese' = completely different."},
+    {type:"mcq",q:"The soldiers marched in perfect ___, every step together.",options:["unison","confusion","fashion","collision"],answer:"unison",explain:"'In unison' = doing something at exactly the same time."},
+    {type:"mcq",q:"Please ___ the lights before leaving the classroom.",options:["switch off","switch on","put up","take after"],answer:"switch off",explain:"Leaving the room → switch OFF the lights to save energy."}
+  ];
+
+  // ---- Synthesis & Transformation (typed) ----
+  var SYN=[
+    {type:"typed",q:"Combine into ONE sentence using the word given.\n\nIt was raining heavily. We went to the park.  (although)",
+     answer:"although it was raining heavily, we went to the park.",
+     answerAlts:["we went to the park although it was raining heavily.","although it was raining heavily , we went to the park."],
+     explain:"Although it was raining heavily, we went to the park. (Remember the comma when 'Although' starts the sentence.)"},
+    {type:"typed",q:"Combine into ONE sentence using the word given.\n\nTom cannot swim. His brother cannot swim.  (neither)",
+     answer:"neither tom nor his brother can swim.",
+     explain:"Neither Tom nor his brother can swim. (After 'neither…nor', use the POSITIVE verb 'can', not 'cannot'.)"},
+    {type:"typed",q:"Rewrite using the word given.\n\nMary is the tallest girl in the class.  (taller)",
+     answer:"mary is taller than any other girl in the class.",
+     answerAlts:["mary is taller than all the other girls in the class."],
+     explain:"Mary is taller than any other girl in the class. ('Any other' keeps Mary out of the comparison.)"},
+    {type:"typed",q:"Combine into ONE sentence using the word given.\n\nHe was tired. He continued working.  (despite)",
+     answer:"despite being tired, he continued working.",
+     answerAlts:["he continued working despite being tired.","despite his tiredness, he continued working.","he continued working despite his tiredness."],
+     explain:"Despite being tired, he continued working. ('Despite' is followed by a noun or -ing form, never 'despite he was tired'.)"},
+    {type:"typed",q:"Rewrite the sentence, beginning with the word given.\n\nThe boy is so young that he cannot ride the roller coaster.\n\nThe boy is too ___",
+     answer:"the boy is too young to ride the roller coaster.",
+     explain:"The boy is too young to ride the roller coaster. ('too + adjective + to' — drop the 'cannot'.)"},
+    {type:"typed",q:"Combine into ONE sentence using the word given.\n\nSiti swept the floor. Then she mopped it.  (after)",
+     answer:"after sweeping the floor, siti mopped it.",
+     answerAlts:["after siti swept the floor, she mopped it.","siti mopped the floor after sweeping it.","after she swept the floor, siti mopped it."],
+     explain:"After sweeping the floor, Siti mopped it. (The action after 'after' happens first.)"},
+    {type:"typed",q:"Rewrite the sentence in REPORTED speech, beginning with the words given.\n\n'I am hungry,' said Ben.\n\nBen said that ___",
+     answer:"ben said that he was hungry.",
+     explain:"Ben said that he was hungry. (Reported speech: 'I' → 'he', 'am' → 'was'.)"},
+    {type:"typed",q:"Combine into ONE sentence using the word given.\n\nThe man is my uncle. He is wearing a red cap.  (who)",
+     answer:"the man who is wearing a red cap is my uncle.",
+     explain:"The man who is wearing a red cap is my uncle. ('Who' points back to the man.)"},
+    {type:"typed",q:"Rewrite using the word given.\n\nJane likes durians. Her sister likes durians too.  (both)",
+     answer:"both jane and her sister like durians.",
+     explain:"Both Jane and her sister like durians. ('Both…and' takes a PLURAL verb: like, not likes.)"},
+    {type:"typed",q:"Rewrite the sentence as a QUESTION, beginning with the word given.\n\nHe goes to school by bus.\n\nHow ___",
+     answer:"how does he go to school?",
+     answerAlts:["how does he go to school"],
+     explain:"How does he go to school? (Question form: does + he + go — the main verb loses its 's'.)"}
+  ];
+
+  // ---- Editing (typed: one wrong word per sentence, student types correction) ----
+  var EDIT=[
+    {type:"typed",q:"Each sentence has ONE wrong word in CAPITALS. Type the correct word.\n\nThe children were very EXCITING when the clown appeared.",answer:"excited",explain:"People feel EXCITED; things are EXCITING. The children were excited."},
+    {type:"typed",q:"Type the correct word.\n\nShe RECIEVED a parcel from her pen pal yesterday.",answer:"received",explain:"Spelling rule: 'i before e, except after c' → received."},
+    {type:"typed",q:"Type the correct word.\n\nThis book is more interesting THEN the one I read last week.",answer:"than",explain:"'Than' compares; 'then' tells time. More interesting THAN."},
+    {type:"typed",q:"Type the correct word.\n\nThe dog wagged ITS' tail happily.",answer:"its",explain:"Possessive 'its' has NO apostrophe. \"It's\" always means 'it is'."},
+    {type:"typed",q:"Type the correct word.\n\nWe SEEN a rainbow after the storm.",answer:"saw",explain:"Past tense of 'see' is 'saw'. 'Seen' needs a helper: 'We have seen'."},
+    {type:"typed",q:"Type the correct word.\n\nThere are TOO mangoes left in the basket.",answer:"two",explain:"two = 2; too = also / more than enough; to = direction."},
+    {type:"typed",q:"Type the correct word.\n\nThe LIBARY closes at six o'clock on Sundays.",answer:"library",explain:"Spelling: lib-RA-ry. Say it slowly: li-bra-ry."},
+    {type:"typed",q:"Type the correct word.\n\nMy shoes are dirty. I must WASHED them tonight.",answer:"wash",explain:"After 'must', use the base form: must wash."},
+    {type:"typed",q:"Type the correct word.\n\nShe did the sums QUICK and checked them twice.",answer:"quickly",explain:"An adverb describes HOW she did the sums → quickly."},
+    {type:"typed",q:"Type the correct word.\n\nNeither of the answers WERE correct.",answer:"was",explain:"'Neither' is singular → was. (Top-school favourite trap!)"}
+  ];
+
+  // ---- Comprehension Cloze (typed blanks with a shared passage) ----
+  var CLOZE_PASSAGE="Singapore's hawker centres are famous all over the (1)___. Locals and tourists queue patiently for their favourite dishes, (2)___ as chicken rice and laksa. In 2020, hawker culture was added to the UNESCO list, a great (3)___ for our little island. Hawkers wake up (4)___ dawn to prepare fresh ingredients. Although the work is tiring, many hawkers say they feel (5)___ when customers enjoy their food. The next time you visit a hawker centre, remember to return your tray — keeping the tables (6)___ is everyone's responsibility.";
+  var CLOZE=[
+    {type:"typed",cloze:1,q:"Blank (1): Singapore's hawker centres are famous all over the ___.",answer:"world",answerAlts:["globe"],explain:"'Famous all over the world' — a set phrase."},
+    {type:"typed",cloze:1,q:"Blank (2): …their favourite dishes, ___ as chicken rice and laksa.",answer:"such",explain:"'Such as' introduces examples."},
+    {type:"typed",cloze:1,q:"Blank (3): …a great ___ for our little island.",answer:"honour",answerAlts:["honor","achievement","pride"],explain:"Being listed by UNESCO is a great honour/achievement."},
+    {type:"typed",cloze:1,q:"Blank (4): Hawkers wake up ___ dawn to prepare fresh ingredients.",answer:"before",answerAlts:["at"],explain:"'Before dawn' (or 'at dawn') — a time preposition fits here."},
+    {type:"typed",cloze:1,q:"Blank (5): …many hawkers say they feel ___ when customers enjoy their food.",answer:"happy",answerAlts:["proud","satisfied","glad","delighted"],explain:"A positive feeling word: happy / proud / satisfied all earn the mark."},
+    {type:"typed",cloze:1,q:"Blank (6): …keeping the tables ___ is everyone's responsibility.",answer:"clean",answerAlts:["tidy","neat"],explain:"Return your tray to keep tables clean/tidy."}
+  ];
+
+  var MODULES={
+    grammar:{name:"Grammar MCQ",bank:GRAMMAR,n:8},
+    vocab:{name:"Vocabulary MCQ",bank:VOCAB,n:8},
+    synthesis:{name:"Synthesis & Transformation",bank:SYN,n:6},
+    editing:{name:"Editing",bank:EDIT,n:8},
+    cloze:{name:"Comprehension Cloze",bank:CLOZE,n:6,passage:CLOZE_PASSAGE,ordered:true}
+  };
+  function buildRound(id){
+    var m=MODULES[id];
+    var qs = m.ordered? m.bank.slice(0,m.n) : shuffle(m.bank).slice(0,m.n);
+    return qs;
+  }
+  function normalize(s){
+    return String(s).trim().toLowerCase()
+      .replace(/[""'']/g,"'")
+      .replace(/\s+/g,' ')
+      .replace(/\s+([,.?!])/g,'$1')
+      .replace(/[.?!]+$/,'');
+  }
+  function checkTyped(q,given){
+    var g=normalize(given);
+    if(g===normalize(q.answer))return true;
+    if(q.answerAlts&&q.answerAlts.some(function(a){return normalize(a)===g;}))return true;
+    return false;
+  }
+  return {MODULES:MODULES,buildRound:buildRound,checkTyped:checkTyped,shuffle:shuffle,CLOZE_PASSAGE:CLOZE_PASSAGE};
+})();
+
+
+var SC_CORE=(function(){
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+  // ---- Booklet A: MCQ by topic (P3–P4 lower block) ----
+  var MCQ=[
+    // Matter
+    {topic:"Matter",type:"mcq",q:"Which of the following has a definite volume but NO definite shape?",options:["water","air","a wooden block","a steel spoon"],answer:"water",explain:"Liquids have a definite volume but take the shape of their container. Gases have neither; solids have both."},
+    {topic:"Matter",type:"mcq",q:"Ken pumped more air into a half-filled balloon. What happened to the mass of air inside?",options:["It increased","It decreased","It stayed the same","It became zero"],answer:"It increased",explain:"Air is matter — it has mass and occupies space. More air pumped in = more mass."},
+    {topic:"Matter",type:"mcq",q:"Which statement about gases is TRUE?",options:["A gas fills up all the space in its container","A gas has a definite shape","A gas has a definite volume","A gas cannot be compressed"],answer:"A gas fills up all the space in its container",explain:"A gas has no definite shape OR volume — it spreads to fill its whole container, and it can be compressed."},
+    {topic:"Matter",type:"mcq",q:"50 ml of water is poured from a tall thin glass into a short wide bowl. What is the volume of water in the bowl?",options:["50 ml","less than 50 ml","more than 50 ml","cannot tell"],answer:"50 ml",explain:"A liquid's VOLUME stays the same even when its shape changes with the container."},
+    // Light
+    {topic:"Light",type:"mcq",q:"We can see a book on the table because the book ___.",options:["reflects light into our eyes","gives out its own light","absorbs all the light","blocks all the light"],answer:"reflects light into our eyes",explain:"Non-luminous objects are seen when light bounces (reflects) off them into our eyes."},
+    {topic:"Light",type:"mcq",q:"Which object would form the DARKEST shadow when placed in front of a torch?",options:["a metal tray","a clear glass sheet","a piece of tracing paper","a plastic ruler"],answer:"a metal tray",explain:"Opaque objects (metal tray) block ALL light → darkest shadow. Transparent and translucent objects let some light through."},
+    {topic:"Light",type:"mcq",q:"A shadow is formed when ___.",options:["light is blocked by an object","light passes through an object","an object reflects light","an object gives out light"],answer:"light is blocked by an object",explain:"Shadow = region where light cannot reach because an object blocked it."},
+    {topic:"Light",type:"mcq",q:"Sam moves an object CLOSER to the torch, keeping the screen still. The shadow on the screen becomes ___.",options:["bigger","smaller","sharper only","unchanged"],answer:"bigger",explain:"Closer to the light source → the object blocks a wider cone of light → bigger shadow."},
+    // Heat
+    {topic:"Heat",type:"mcq",q:"Heat always flows from ___.",options:["a hotter object to a cooler object","a cooler object to a hotter object","a bigger object to a smaller object","a solid to a liquid"],answer:"a hotter object to a cooler object",explain:"Heat flows from hotter to cooler until both reach the same temperature."},
+    {topic:"Heat",type:"mcq",q:"Which instrument measures temperature accurately?",options:["a thermometer","our hands","a measuring cylinder","a beam balance"],answer:"a thermometer",explain:"Hands can only compare roughly and can be fooled. A thermometer gives a reading in °C."},
+    {topic:"Heat",type:"mcq",q:"A metal gate feels colder than a wooden gate on the same morning because the metal ___.",options:["conducts heat away from our hand faster","is at a lower temperature","contains ice","reflects sunlight"],answer:"conducts heat away from our hand faster",explain:"Both gates are at the SAME temperature. Metal is a better conductor, so it draws heat from your hand faster — it only FEELS colder. Top-school favourite!"},
+    {topic:"Heat",type:"mcq",q:"When water GAINS enough heat, it changes into steam. This process is called ___.",options:["boiling","freezing","condensation","melting"],answer:"boiling",explain:"Water → steam (gas) by gaining heat = boiling/evaporation. Losing heat: steam → water is condensation."},
+    // Digestive system
+    {topic:"Body",type:"mcq",q:"In which part of the digestive system is digested food absorbed into the body?",options:["small intestine","stomach","gullet","large intestine"],answer:"small intestine",explain:"Digestion finishes in the small intestine, where digested food is absorbed. The large intestine absorbs water."},
+    {topic:"Body",type:"mcq",q:"What is the correct path of food through the digestive system?",options:["mouth → gullet → stomach → small intestine → large intestine","mouth → stomach → gullet → small intestine → large intestine","mouth → gullet → small intestine → stomach → large intestine","mouth → windpipe → stomach → intestines"],answer:"mouth → gullet → stomach → small intestine → large intestine",explain:"Remember: M-G-S-S-L. The windpipe is for AIR, not food!"},
+    {topic:"Body",type:"mcq",q:"Digestion begins in the ___.",options:["mouth","stomach","small intestine","gullet"],answer:"mouth",explain:"Teeth break food up and saliva starts digesting it — so digestion begins in the mouth."},
+    {topic:"Body",type:"mcq",q:"Which part of the digestive system does NOT digest food?",options:["gullet","mouth","stomach","small intestine"],answer:"gullet",explain:"The gullet only pushes food down to the stomach — no digestion happens there."},
+    // Life cycles (P3 carry-over, often re-tested at P4)
+    {topic:"Life cycles",type:"mcq",q:"Which insect has a life cycle with only THREE stages?",options:["cockroach","butterfly","mosquito","beetle"],answer:"cockroach",explain:"Cockroach & grasshopper: egg → nymph → adult (3 stages). Butterfly, mosquito, beetle have 4 stages (with pupa)."},
+    {topic:"Life cycles",type:"mcq",q:"During which stage does a butterfly NOT eat?",options:["pupa","egg","caterpillar (larva)","adult"],answer:"pupa",explain:"The pupa stage is for changing into an adult — no feeding happens then."},
+    // Magnets (P3 carry-over)
+    {topic:"Magnets",type:"mcq",q:"Which material can be attracted by a magnet?",options:["iron","copper","aluminium","plastic"],answer:"iron",explain:"Magnetic materials: iron, steel, nickel, cobalt. Copper and aluminium are metals but NOT magnetic — a favourite trap!"},
+    {topic:"Magnets",type:"mcq",q:"The north pole of magnet A is brought near the north pole of magnet B. What happens?",options:["They repel each other","They attract each other","Nothing happens","Both magnets lose their magnetism"],answer:"They repel each other",explain:"Like poles repel; unlike poles attract."}
+  ];
+
+  // ---- Booklet B: Open-ended with keyword scoring (2 marks each) ----
+  // keywords: array of concept groups; each group = list of acceptable synonyms; each group hit = 1 mark (max 2)
+  var OE=[
+    {type:"open",q:"Ali left a bicycle outside overnight. In the morning, the metal handlebar felt colder than the plastic seat. Were the handlebar and the seat at different temperatures? Explain your answer. [2m]",
+     keywords:[["same temperature","same temp"],["conduct","conductor","conducts heat","draws heat","removes heat","takes away heat"]],
+     model:"No. Both were at the SAME temperature. The metal handlebar is a better conductor of heat, so it conducts heat away from Ali's hand faster, making it FEEL colder.",
+     explain:"Marker looks for 2 points: (1) same temperature, (2) metal conducts heat away from the hand faster."},
+    {type:"open",q:"A plastic bottle is sealed with some air inside. The bottle is then squeezed and becomes smaller. What happens to (a) the volume and (b) the mass of the air inside? [2m]",
+     keywords:[["volume decrease","volume decreases","volume decreased","smaller volume","volume becomes smaller","volume of the air decreases"],["stays the same","remains the same","remain the same","unchanged","same mass","does not change","no change"]],
+     model:"(a) The volume of the air decreases because air can be compressed. (b) The mass of the air stays the same because no air enters or leaves the sealed bottle.",
+     explain:"Two marks: volume decreases (air is compressible) + mass unchanged (bottle is sealed)."},
+    {type:"open",q:"Meiling shone a torch at a toy and a shadow formed on the wall. State TWO ways she can make the shadow bigger. [2m]",
+     keywords:[["toy closer to the torch","object closer to the torch","closer to the light","nearer to the torch","nearer the light","move the toy towards the torch"],["wall further","screen further","move the wall away","further from the toy","move the torch closer","torch nearer the toy"]],
+     model:"1) Move the toy closer to the torch (light source). 2) Move the wall/screen further away from the toy (or move the torch closer to the toy).",
+     explain:"Any two: object nearer light source; screen further from object; light source nearer object."},
+    {type:"open",q:"Why is the small intestine an important part of the digestive system? Give TWO reasons. [2m]",
+     keywords:[["digest","digestion is completed","digests food","completes digestion"],["absorb","absorbed","absorption","absorbs digested food"]],
+     model:"1) Digestion of food is completed in the small intestine. 2) Digested food is absorbed into the blood through the walls of the small intestine.",
+     explain:"Two marks: completes digestion + absorbs digested food."},
+    {type:"open",q:"Ben says, 'Air is not matter because I cannot see it.' Do you agree? Explain with TWO properties of matter. [2m]",
+     keywords:[["mass","has mass"],["space","occupies space","takes up space","volume"]],
+     model:"No, I disagree. Air IS matter because it has mass and it occupies space (e.g. air pumped into a balloon makes it heavier and inflates it).",
+     explain:"Matter = anything that has mass and occupies space. Seeing is not a test for matter!"},
+    {type:"open",q:"A cup of hot Milo is left on the table. After 30 minutes it becomes cool. Explain why, using the idea of heat flow. [2m]",
+     keywords:[["heat","loses heat","heat is lost","heat flows"],["surrounding","surroundings","cooler air","to the air","cooler surroundings"]],
+     model:"The hot Milo loses heat to the cooler surroundings/air. Heat flows from the hotter Milo to the cooler surroundings until they reach the same temperature.",
+     explain:"Direction matters: heat flows FROM the hot drink TO the cooler surroundings — never say 'cold enters the drink'."},
+    {type:"open",q:"Mosquitoes breed in still water. Using your knowledge of the mosquito's life cycle, explain why removing stagnant water at home helps control mosquitoes. [2m]",
+     keywords:[["egg","eggs","lay eggs","larva","larvae","pupa"],["water","in water","without water","cannot survive","cannot develop","no place to breed","cannot breed"]],
+     model:"Mosquitoes lay their eggs in water, and the larva and pupa stages live in water. Without stagnant water, the eggs/larvae/pupae cannot survive, so the life cycle is broken and mosquitoes cannot breed.",
+     explain:"Link the life-cycle stages (egg, larva, pupa need water) to breaking the cycle — that's the 'application' mark."},
+    {type:"open",q:"A torch shines on a glass window, a sheet of tracing paper and a wooden door. Which object lets NO light pass through, and what do we call such objects? [2m]",
+     keywords:[["wooden door","the door","wood"],["opaque"]],
+     model:"The wooden door lets no light pass through. Such objects are called OPAQUE objects.",
+     explain:"Transparent (glass) → most light passes; translucent (tracing paper) → some; opaque (wood) → none."}
+  ];
+
+  var MODULES={
+    matter:{name:"Matter",bank:MCQ.filter(function(x){return x.topic==="Matter";}),n:4},
+    light:{name:"Light & Shadows",bank:MCQ.filter(function(x){return x.topic==="Light";}),n:4},
+    heat:{name:"Heat & Temperature",bank:MCQ.filter(function(x){return x.topic==="Heat";}),n:4},
+    body:{name:"Digestive System",bank:MCQ.filter(function(x){return x.topic==="Body";}),n:4},
+    mixed:{name:"Booklet A Mixed",bank:MCQ,n:10},
+    open:{name:"Booklet B Open-Ended",bank:OE,n:5}
+  };
+  function buildRound(id){var m=MODULES[id];return shuffle(m.bank).slice(0,m.n);}
+  function scoreOpen(q,ans){
+    var a=String(ans).toLowerCase();
+    var marks=0, missed=[];
+    q.keywords.forEach(function(group){
+      var hit=group.some(function(k){return a.indexOf(k)!==-1;});
+      if(hit)marks++; else missed.push(group[0]);
+    });
+    return {marks:marks,max:q.keywords.length,missed:missed};
+  }
+  return {MODULES:MODULES,buildRound:buildRound,scoreOpen:scoreOpen,shuffle:shuffle};
+})();
+
+
+var CL_CORE=(function(){
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+  // ---- 听写词库（P4 高华水平：课内高频 + 高华拓展）----
+  var DICT=[
+    {w:"骄傲",py:"jiāo ào",hint:"自满；也可指自豪"},{w:"环境",py:"huán jìng",hint:"周围的自然条件"},
+    {w:"温暖",py:"wēn nuǎn",hint:"不冷不热，让人舒服"},{w:"整齐",py:"zhěng qí",hint:"有条理，不乱"},
+    {w:"练习",py:"liàn xí",hint:"反复学习使熟练"},{w:"感谢",py:"gǎn xiè",hint:"表示谢意"},
+    {w:"勇敢",py:"yǒng gǎn",hint:"不怕困难和危险"},{w:"仔细",py:"zǐ xì",hint:"细心，不马虎"},
+    {w:"健康",py:"jiàn kāng",hint:"身体好"},{w:"努力",py:"nǔ lì",hint:"用功，尽力"},
+    {w:"安静",py:"ān jìng",hint:"没有声音"},{w:"精彩",py:"jīng cǎi",hint:"表演很好看"},
+    {w:"新鲜",py:"xīn xiān",hint:"刚生产的，不陈旧"},{w:"团结",py:"tuán jié",hint:"大家一条心"},
+    {w:"诚实",py:"chéng shí",hint:"说真话，不欺骗"},{w:"整理",py:"zhěng lǐ",hint:"收拾，使有条理"},
+    {w:"邻居",py:"lín jū",hint:"住在隔壁的人"},{w:"著名",py:"zhù míng",hint:"很有名"},
+    {w:"丰富",py:"fēng fù",hint:"种类多，数量大"},{w:"讨论",py:"tǎo lùn",hint:"大家一起交换意见"},
+    {w:"继续",py:"jì xù",hint:"不停止，接着做"},{w:"熟悉",py:"shú xī",hint:"了解得很清楚"},
+    {w:"羡慕",py:"xiàn mù",hint:"看见别人好，自己也想要（高华）"},{w:"犹豫",py:"yóu yù",hint:"拿不定主意（高华）"},
+    {w:"鼓励",py:"gǔ lì",hint:"激发别人的勇气"},{w:"温馨",py:"wēn xīn",hint:"温暖而甜美（高华）"},
+    {w:"珍惜",py:"zhēn xī",hint:"重视，爱惜"},{w:"辛苦",py:"xīn kǔ",hint:"身心劳累"},
+    {w:"厉害",py:"lì hai",hint:"本领高强"},{w:"惭愧",py:"cán kuì",hint:"因做错事而不安（高华）"}
+  ];
+
+  // ---- 前后鼻音辨析（in/ing、en/eng、an/ang）----
+  var PINYIN=[
+    {type:"mcq",q:"「森林」的正确读音是？",options:["sēn lín","sēng líng","sēn líng","sēng lín"],answer:"sēn lín",explain:"森=sēn（前鼻音 en），林=lín（前鼻音 in）。两个都是前鼻音，舌尖抵住上齿龈。"},
+    {type:"mcq",q:"「风筝」的正确读音是？",options:["fēng zheng","fēn zhen","fēng zhen","fēn zheng"],answer:"fēng zheng",explain:"风=fēng（后鼻音 eng），筝=zheng（轻声，后鼻音）。放风筝要「更高」——记住都是后鼻音。"},
+    {type:"mcq",q:"「星星」的「星」是？",options:["后鼻音 xīng","前鼻音 xīn","翘舌音 shīng","平舌音 sīng"],answer:"后鼻音 xīng",explain:"星=xīng（后鼻音 ing）。「心」才是前鼻音 xīn。星星在天上——想着「高高的」就是后鼻音。"},
+    {type:"mcq",q:"「亲切」的正确读音是？",options:["qīn qiè","qīng qiè","qīn qè","qīng qè"],answer:"qīn qiè",explain:"亲=qīn（前鼻音 in）。「亲」和「琴、勤」同韵，都是前鼻音。"},
+    {type:"mcq",q:"「蜻蜓」的正确读音是？",options:["qīng tíng","qīn tín","qīng tín","qīn tíng"],answer:"qīng tíng",explain:"蜻=qīng、蜓=tíng，都是后鼻音 ing。蜻蜓飞得高——后鼻音。"},
+    {type:"mcq",q:"「陈旧」的「陈」是？",options:["前鼻音 chén","后鼻音 chéng","前鼻音 cén","后鼻音 céng"],answer:"前鼻音 chén",explain:"陈=chén（前鼻音 en）。「成」才是后鼻音 chéng。新加坡姓氏：陈（Tan/Chen）是前鼻音！"},
+    {type:"mcq",q:"「盘子」的「盘」是？",options:["前鼻音 pán","后鼻音 páng","前鼻音 pén","后鼻音 péng"],answer:"前鼻音 pán",explain:"盘=pán（前鼻音 an）。「旁」才是后鼻音 páng。"},
+    {type:"mcq",q:"「帮忙」的正确读音是？",options:["bāng máng","bān mán","bāng mán","bān máng"],answer:"bāng máng",explain:"帮=bāng、忙=máng，都是后鼻音 ang。"},
+    {type:"mcq",q:"「拼命」的正确读音是？",options:["pīn mìng","pīng mìn","pīn mìn","pīng mìng"],answer:"pīn mìng",explain:"拼=pīn（前鼻音），命=mìng（后鼻音）。一前一后，最容易错——多读几遍！"},
+    {type:"mcq",q:"「身体」的「身」是？",options:["前鼻音 shēn","后鼻音 shēng","前鼻音 sēn","后鼻音 sēng"],answer:"前鼻音 shēn",explain:"身=shēn（前鼻音 en）。「生、声、升」才是后鼻音 shēng。"},
+    {type:"mcq",q:"「宁静」的正确读音是？",options:["níng jìng","nín jìn","níng jìn","nín jìng"],answer:"níng jìng",explain:"宁=níng、静=jìng，都是后鼻音 ing。"},
+    {type:"mcq",q:"「今天很冷」——「冷」的读音是？",options:["后鼻音 lěng","前鼻音 lěn","后鼻音 lǒng","前鼻音 lún"],answer:"后鼻音 lěng",explain:"冷=lěng（后鼻音 eng）。普通话里没有 lěn 这个音节。"}
+  ];
+
+  // ---- 的地得专项 ----
+  var DEDE=[
+    {type:"mcq",q:"美丽（　）花园里开满了花。",options:["的","地","得"],answer:"的",explain:"「美丽」修饰名词「花园」→ 用「的」。口诀：名词前面用「的」。"},
+    {type:"mcq",q:"他飞快（　）跑向终点。",options:["地","的","得"],answer:"地",explain:"「飞快」修饰动词「跑」→ 用「地」。口诀：动词前面用「地」。"},
+    {type:"mcq",q:"妹妹唱歌唱（　）很好听。",options:["得","的","地"],answer:"得",explain:"「唱」之后补充说明唱的程度 → 用「得」。口诀：动词后面用「得」。"},
+    {type:"mcq",q:"小明认真（　）完成了作业。",options:["地","的","得"],answer:"地",explain:"「认真」修饰动词「完成」→ 用「地」。"},
+    {type:"mcq",q:"这是一本有趣（　）故事书。",options:["的","地","得"],answer:"的",explain:"「有趣」修饰名词「故事书」→ 用「的」。"},
+    {type:"mcq",q:"雨下（　）很大，我们只好待在家里。",options:["得","的","地"],answer:"得",explain:"「下」之后说明雨下的程度 → 用「得」。"},
+    {type:"mcq",q:"他高兴（　）跳了起来。",options:["地","的","得"],answer:"地",explain:"「高兴」修饰动作「跳」→ 用「地」。"},
+    {type:"mcq",q:"她写（　）字比我写（　）整齐。",options:["的 / 得","地 / 得","的 / 的","得 / 得"],answer:"的 / 得",explain:"「她写的字」——「字」是名词用「的」；「写得整齐」——补充程度用「得」。一句两考，名校最爱！"},
+    {type:"mcq",q:"爷爷慢慢（　）走进公园。",options:["地","的","得"],answer:"地",explain:"「慢慢」修饰动词「走」→ 用「地」。"},
+    {type:"mcq",q:"今天（　）天气真好！",options:["的","地","得"],answer:"的",explain:"「今天」修饰名词「天气」→ 用「的」。"},
+    {type:"mcq",q:"弟弟累（　）睡着了。",options:["得","的","地"],answer:"得",explain:"「累」之后补充结果（睡着了）→ 用「得」。"},
+    {type:"mcq",q:"同学们兴高采烈（　）参加运动会。",options:["地","的","得"],answer:"地",explain:"成语「兴高采烈」修饰动词「参加」→ 用「地」。"}
+  ];
+
+  // ---- 词语搭配 / 量词 ----
+  var COLLO=[
+    {type:"mcq",q:"一（　）新闻",options:["则","个","条","张"],answer:"则",explain:"新闻、消息、日记用「则」（「条」在口语中也常见，但考试标准答案多为「则」）。"},
+    {type:"mcq",q:"一（　）钥匙",options:["把","个","支","条"],answer:"把",explain:"有柄或可抓握的东西用「把」：一把钥匙、一把伞、一把刀。"},
+    {type:"mcq",q:"（　）困难",options:["克服","打败","消灭","拒绝"],answer:"克服",explain:"固定搭配：克服困难。「打败」搭配对手，「消灭」搭配敌人。"},
+    {type:"mcq",q:"（　）时间",options:["珍惜","珍贵","宝贵","爱护"],answer:"珍惜",explain:"「珍惜」是动词，搭配「时间」；「珍贵、宝贵」是形容词，不能直接带宾语。"},
+    {type:"mcq",q:"一（　）大雨",options:["场","个","阵子","滴"],answer:"场",explain:"雨、雪、比赛、电影用「场」：一场大雨、一场比赛。"},
+    {type:"mcq",q:"（　）态度",options:["端正","改正","纠正","修正"],answer:"端正",explain:"固定搭配：端正态度、改正错误、纠正发音。"},
+    {type:"mcq",q:"一（　）骏马",options:["匹","只","头","条"],answer:"匹",explain:"马用「匹」；牛用「头」；狗、猫用「只」；鱼、蛇用「条」。"},
+    {type:"mcq",q:"（　）知识",options:["丰富","增加","提高","扩大"],answer:"丰富",explain:"固定搭配：丰富知识、增加收入、提高水平、扩大范围。"},
+    {type:"mcq",q:"一（　）眼镜",options:["副","双","对","只"],answer:"副",explain:"成套的东西用「副」：一副眼镜、一副手套、一副对联。"},
+    {type:"mcq",q:"（　）承诺",options:["履行","实行","执行","进行"],answer:"履行",explain:"固定搭配：履行承诺/诺言、执行任务、实行计划。（高华水平）"}
+  ];
+
+  var MODULES={
+    dict:{name:"听写练习",bank:DICT,n:8,dictation:true},
+    pinyin:{name:"前后鼻音辨析",bank:PINYIN,n:8},
+    dede:{name:"的地得专项",bank:DEDE,n:8},
+    collo:{name:"词语搭配·量词",bank:COLLO,n:8}
+  };
+  function buildRound(id){
+    var m=MODULES[id];
+    if(m.dictation){
+      return shuffle(m.bank).slice(0,m.n).map(function(x){
+        return {type:"dictation",w:x.w,py:x.py,hint:x.hint,q:"听一听，写出词语（提示："+x.hint+"）",answer:x.w,explain:"正确写法："+x.w+"（"+x.py+"）"};
+      });
+    }
+    return shuffle(m.bank).slice(0,m.n);
+  }
+  function checkTyped(q,given){
+    return String(given).trim()===q.answer;
+  }
+  return {MODULES:MODULES,buildRound:buildRound,checkTyped:checkTyped,shuffle:shuffle};
+})();
+
+if(typeof module!=='undefined')module.exports={EN:EN_CORE,MA:MA_CORE,SC:SC_CORE,CL:CL_CORE};
+</script>
+
+<script>
+/* ================= APP ENGINE ================= */
+var KEY='ye_p4_app_v2';
+var DB=load();
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY));if(d&&d.log)return d;}catch(e){}
+  return {stars:0,log:[],errorBook:[],gamePlayedOn:''};}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){}}
+function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+
+var SUBJ={
+  en:{name:'English',icon:'📖',color:'var(--en)',hex:'#0f9b8e',core:EN_CORE,
+      icons:{grammar:"🔤",vocab:"💡",synthesis:"🔗",editing:"✏️",cloze:"🧩"},
+      descs:{grammar:"Subject-verb · tenses · prepositions",vocab:"Words in context · idioms",synthesis:"Combine & rewrite — typed",editing:"Fix the wrong word — typed",cloze:"Fill the passage blanks"}},
+  ma:{name:'Maths',icon:'➗',color:'var(--ma)',hex:'#f5a623',core:MA_CORE,
+      icons:{number:"🔢",fraction:"🍕",decimal:"💰",geometry:"📐",word:"🧩"},
+      descs:{number:"Place value · rounding · factors",fraction:"Equivalent · mixed · add & subtract",decimal:"Compare · + − ×",geometry:"Angles · nets · area · pie charts",word:"Two-step problems + hints"}},
+  sc:{name:'Science',icon:'🔬',color:'var(--sc)',hex:'#3cb371',core:SC_CORE,
+      icons:{matter:"🧊",light:"🔦",heat:"🌡️",body:"🫁",mixed:"📋",open:"✍️"},
+      descs:{matter:"Solids · liquids · gases",light:"Shadows · opaque vs transparent",heat:"Heat flow · conductors",body:"Digestive system",mixed:"10-Q exam mode",open:"Booklet B · keyword marking"}},
+  cl:{name:'高级华文',icon:'✍️',color:'var(--cl)',hex:'#e2604a',core:CL_CORE,
+      icons:{dict:"🖌️",pinyin:"拼",dede:"的",collo:"🔗"},
+      descs:{dict:"听音·手写汉字·自我批改",pinyin:"in/ing·en/eng·an/ang",dede:"名词的·动地·得程度",collo:"量词 + 固定搭配"}}
+};
+var GOAL=20;
+
+/* ---------- navigation ---------- */
+function go(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('show');});
+  document.getElementById('scr-'+id).classList.add('show');
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('active',t.dataset.scr===id);});
+  if(id==='home')renderHome();
+  if(SUBJ[id])renderSubject(id);
+}
+function renderSubject(sid){
+  var S=SUBJ[sid],el=document.getElementById('scr-'+sid);
+  var html='<div class="subjhead"><span class="ic">'+S.icon+'</span><div><h2>'+S.name+'</h2><div class="sub">选一个模块开始 · 答对拿⭐</div></div></div><div class="mode-grid">';
+  Object.keys(S.core.MODULES).forEach(function(k){
+    html+='<div class="mode-card" onclick="startRound(\''+sid+'\',\''+k+'\')"><div class="stripe" style="background:'+S.hex+'"></div><div class="mi">'+S.icons[k]+'</div><div class="mt">'+S.core.MODULES[k].name+'</div><div class="md">'+S.descs[k]+'</div></div>';
+  });
+  el.innerHTML=html+'</div>';
+}
+
+/* ---------- daily stats ---------- */
+function todayLog(){var t=today();return DB.log.filter(function(x){return x.d===t;});}
+function todayQCount(){return todayLog().reduce(function(a,x){return a+x.n;},0);}
+function goalReached(){return todayQCount()>=GOAL;}
+function renderHome(){
+  document.getElementById('starCount').textContent=DB.stars;
+  document.getElementById('ebCount').textContent=DB.errorBook.length;
+  var n=todayQCount(),p=Math.min(100,Math.round(n/GOAL*100));
+  document.getElementById('goalRing').style.setProperty('--p',p);
+  document.getElementById('goalPct').textContent=p+'%';
+  document.getElementById('goalTotal').textContent=GOAL;
+  document.getElementById('goalDone').textContent='已完成 '+n+' 题 · '+(goalReached()?'任务达成！🎉':'做完解锁🎮和🏅报告');
+  document.getElementById('gameBtn').disabled=!goalReached();
+  var says=goalReached()? ['任务完成，你太棒啦！','去玩接星星吧！🌟','记得看看今日报告哦～'] :
+    ['今天也一起加油吧！','先来 8 道题热热身？','错题闯关能清空错题本哦！'];
+  document.getElementById('mascotSay').innerHTML='你好呀，Ye！<small>'+says[Math.floor(Math.random()*says.length)]+'</small>';
+}
+
+/* ---------- round engine ---------- */
+var round=[],idx=0,earned=0,maxMarks=0,qCount=0,modName='',curSid='';
+function startRound(sid,mod){
+  curSid=sid;
+  round=SUBJ[sid].core.buildRound(mod).map(function(q){q.__sid=sid;return q;});
+  modName=SUBJ[sid].core.MODULES[mod].name;
+  beginRound();
+}
+function startErrorRound(){
+  if(!DB.errorBook.length){alert('错题本是空的——太棒了！🎉');return;}
+  round=shuffleA(DB.errorBook).slice(0,8);modName='错题闯关';curSid='';
+  beginRound();
+}
+function beginRound(){
+  idx=0;earned=0;maxMarks=0;qCount=0;
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('show');});
+  document.getElementById('scr-quiz').classList.add('show');
+  showQ();
+}
+function shuffleA(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function el(id){return document.getElementById(id);}
+function hideAllInputs(){['opts','typedWrap','openWrap','hwWrap'].forEach(function(i){el(i).style.display= i==='opts'?'grid':'none';});el('opts').innerHTML='';el('speakBtn').style.display='none';}
+function showQ(){
+  var q=round[idx];
+  el('barFill').style.width=(idx/round.length*100)+'%';
+  el('qnum').textContent=modName+' · '+(idx+1)+' / '+round.length;
+  el('fb').style.display='none';el('explain').style.display='none';el('nextBtn').style.display='none';
+  hideAllInputs();
+  if(q.type==='dictation'){
+    el('qtext').textContent= ttsOK? '听一听，在米字格里写出词语 🖌️（'+q.hint+'）' : '🔇 按拼音写词：'+q.py+'（'+q.hint+'）';
+    el('speakBtn').style.display='block';
+    buildHw(q);
+    setTimeout(speakCurrent,300);
+  }else if(q.type==='open'){
+    el('qtext').textContent=q.q;
+    el('openWrap').style.display='block';var t=el('openAns');t.value='';t.disabled=false;
+  }else if(q.type==='mcq'){
+    el('qtext').textContent=q.q;
+    shuffleA(q.options).forEach(function(o){
+      var b=document.createElement('button');b.className='opt';b.textContent=o;
+      b.onclick=function(){answerMcq(b,o,q);};
+      el('opts').appendChild(b);
+    });
+  }else{ // typed
+    el('qtext').textContent=q.q;
+    el('typedWrap').style.display='block';var i=el('typedAns');i.value='';i.disabled=false;
+  }
+}
+function answerMcq(btn,o,q){
+  var ok=(String(o)===String(q.answer));
+  document.querySelectorAll('.opt').forEach(function(b){
+    b.disabled=true;
+    if(b.textContent===String(q.answer))b.classList.add('correct');
+  });
+  if(!ok)btn.classList.add('wrong');
+  scoreQ(ok?1:0,1,q, ok? null : '正确答案：'+q.answer);
+}
+function submitTyped(){
+  var q=round[idx],v=el('typedAns').value;
+  if(!v.trim())return;
+  el('typedAns').disabled=true;
+  var core=SUBJ[q.__sid||curSid].core;
+  var ok=core.checkTyped(q,v);
+  scoreQ(ok?1:0,1,q, ok?null:'参考答案：'+q.answer);
+}
+function submitOpen(){
+  var q=round[idx],v=el('openAns').value;
+  if(!v.trim())return;
+  el('openAns').disabled=true;
+  var r=SC_CORE.scoreOpen(q,v);
+  var note= r.marks===r.max?null: (r.marks>0? '拿到 '+r.marks+'/'+r.max+' 分，漏了要点："'+r.missed.join('、')+'"':'0/'+r.max+' 分，评分要点："'+r.missed.join('、')+'"');
+  scoreQ(r.marks,r.max,q,note,r.marks>0&&r.marks<r.max);
+}
+function scoreQ(got,max,q,note,partial){
+  earned+=got;maxMarks+=max;qCount++;
+  var full=(got===max);
+  var fb=el('fb');fb.style.display='block';
+  fb.className='fb '+(full?'good':partial?'part':'bad');
+  fb.textContent= full? pick(['答对啦！🎉','太棒了！⭐','厉害！👍','Perfect! 🌟']) : (note||'再想想～');
+  if(full){DB.stars+=got;popStars();burst();removeEB(q);}else addEB(q);
+  var ex=el('explain');
+  var txt=(q.model?('Model answer: '+q.model+'\n\n'):'')+(q.explain||'');
+  if(txt){ex.style.display='block';ex.textContent=txt;}
+  el('nextBtn').style.display='inline-block';
+  save();
+}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function qKey(q){return q.type==='dictation'?'d:'+q.w:q.q;}
+function addEB(q){if(!DB.errorBook.some(function(e){return qKey(e)===qKey(q);}))DB.errorBook.push(q);}
+function removeEB(q){DB.errorBook=DB.errorBook.filter(function(e){return qKey(e)!==qKey(q);});}
+function nextQ(){idx++;if(idx>=round.length)return endRound();showQ();}
+function quitRound(){go(curSid||'home');}
+function endRound(){
+  DB.log.push({d:today(),subj:curSid||'eb',mod:modName,score:earned,n:qCount,total:maxMarks});save();
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('show');});
+  var d=el('scr-done');d.classList.add('show');
+  var pct=maxMarks?Math.round(earned/maxMarks*100):0;
+  var starRow='⭐'.repeat(Math.max(1,Math.round(pct/20)));
+  var msg=pct===100?'满分！YeYeYeYe！🏆':pct>=75?'真棒，继续冲！':pct>=50?'不错！去错题闯关变更强！':'错题是升级的宝石，去收集吧！';
+  d.innerHTML='<div class="resultcard"><div style="font-weight:900">'+modName+'</div><div class="big" style="color:'+(pct>=75?'var(--good)':'var(--ma)')+'">'+earned+' / '+maxMarks+'</div><div class="stars">'+starRow+'</div><div class="msg">'+msg+'</div><div class="homebtns" style="margin-top:16px"><button class="bigbtn report" onclick="showReport();go(\'home\');">🏅 看今日报告</button><button class="bigbtn game" onclick="go(\'home\');tryGame()" '+(goalReached()?'':'disabled')+'>🎮 奖励游戏</button></div><div style="margin-top:10px"><button class="pill" onclick="go(\''+(curSid||'home')+'\')">← 返回</button></div></div>';
+  bigBurst();
+}
+
+/* ---------- confetti ---------- */
+var EMOJI=['🎉','⭐','✨','🎈','🌟'];
+function burst(){for(var i=0;i<8;i++)spawnConf(window.innerWidth/2,window.innerHeight/2.4);}
+function bigBurst(){var n=0;var t=setInterval(function(){for(var i=0;i<10;i++)spawnConf(Math.random()*window.innerWidth,window.innerHeight/3);if(++n>4)clearInterval(t);},180);}
+function spawnConf(x,y){
+  var s=document.createElement('span');s.className='confetti';s.textContent=pick(EMOJI);
+  s.style.left=x+'px';s.style.top=y+'px';
+  s.style.setProperty('--dx',(Math.random()*260-130)+'px');
+  s.style.setProperty('--dy',(Math.random()*-240-40)+'px');
+  s.style.setProperty('--rot',(Math.random()*360-180)+'deg');
+  document.body.appendChild(s);setTimeout(function(){s.remove();},950);
+}
+function popStars(){var b=el('starBox');b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');el('starCount').textContent=DB.stars;}
+
+/* ---------- TTS ---------- */
+var zhVoice=null,ttsOK=false;
+function pickVoice(){
+  if(!('speechSynthesis' in window))return;
+  var v=speechSynthesis.getVoices();
+  zhVoice=v.find(function(x){return x.lang==='zh-CN';})||v.find(function(x){return x.lang&&x.lang.indexOf('zh')===0;})||null;
+  ttsOK=!!zhVoice;
+  el('ttsWarn').style.display=ttsOK?'none':'block';
+}
+if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
+else document.addEventListener('DOMContentLoaded',function(){el('ttsWarn').style.display='block';});
+function speak(t){
+  if(!ttsOK)return false;
+  try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='zh-CN';if(zhVoice)u.voice=zhVoice;u.rate=0.8;speechSynthesis.speak(u);return true;}catch(e){return false;}
+}
+function speakCurrent(){var q=round[idx];if(q&&q.w)speak(q.w);}
+
+/* ---------- handwriting (米字格) ---------- */
+var hwCanvases=[];
+function buildHw(q){
+  el('hwWrap').style.display='block';
+  el('selfMark').style.display='none';
+  var row=el('hwRow');row.innerHTML='';hwCanvases=[];
+  for(var i=0;i<q.w.length;i++){
+    var box=document.createElement('div');box.className='hwbox';
+    var c=document.createElement('canvas');c.width=150;c.height=150;
+    var ans=document.createElement('div');ans.className='hwans';ans.textContent=q.w[i];
+    box.appendChild(c);box.appendChild(ans);row.appendChild(box);
+    initCanvas(c);hwCanvases.push(c);
+  }
+}
+function initCanvas(c){
+  var ctx=c.getContext('2d');
+  drawGuide(ctx,c.width,c.height);
+  var drawing=false,last=null;
+  function pos(e){var r=c.getBoundingClientRect();return {x:(e.clientX-r.left)*(c.width/r.width),y:(e.clientY-r.top)*(c.height/r.height)};}
+  c.addEventListener('pointerdown',function(e){e.preventDefault();drawing=true;last=pos(e);c.setPointerCapture(e.pointerId);});
+  c.addEventListener('pointermove',function(e){
+    if(!drawing)return;e.preventDefault();
+    var p=pos(e);ctx.strokeStyle='#2b2b2b';ctx.lineWidth=7;ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p;
+  });
+  ['pointerup','pointercancel','pointerleave'].forEach(function(ev){c.addEventListener(ev,function(){drawing=false;});});
+}
+function drawGuide(ctx,w,h){
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='#f0c8bf';ctx.lineWidth=1.5;ctx.setLineDash([6,5]);
+  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(w,h);ctx.moveTo(w,0);ctx.lineTo(0,h);
+  ctx.moveTo(w/2,0);ctx.lineTo(w/2,h);ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();
+  ctx.setLineDash([]);
+}
+function hwClear(){hwCanvases.forEach(function(c){drawGuide(c.getContext('2d'),c.width,c.height);});}
+function hwReveal(){
+  document.querySelectorAll('.hwans').forEach(function(a){a.style.display='grid';});
+  el('selfMark').style.display='flex';
+  var q=round[idx];
+  el('qtext').textContent='对一对：'+q.w+'（'+q.py+'）— 写对了吗？';
+}
+function hwMark(ok){
+  var q=round[idx];
+  el('selfMark').style.display='none';
+  scoreQ(ok?1:0,1,q, ok?null:'没关系，进错题本多练几次就记住啦！');
+}
+
+/* ---------- report ---------- */
+function showReport(){
+  var logs=todayLog();
+  var area=el('reportArea');
+  if(!logs.length){area.innerHTML='<div class="rep"><h3>🏅 今日报告</h3><div class="repnote">今天还没有练习记录，先去做几道题吧！</div></div>';return;}
+  var by={};
+  logs.forEach(function(x){var k=x.subj;if(!by[k])by[k]={score:0,total:0,n:0,rounds:0};by[k].score+=x.score;by[k].total+=x.total;by[k].n+=x.n;by[k].rounds++;});
+  var html='<div class="rep"><h3>🏅 '+today()+' 学习报告</h3>';
+  var best=null,weak=null;
+  Object.keys(by).forEach(function(k){
+    var b=by[k],pct=b.total?Math.round(b.score/b.total*100):0;
+    var S=SUBJ[k]||{name:'错题闯关',hex:'#7c6cf0',icon:'📕'};
+    if(k!=='eb'){if(!best||pct>best.pct)best={k:k,pct:pct};if(!weak||pct<weak.pct)weak={k:k,pct:pct};}
+    html+='<div class="repbar"><div class="lab"><span>'+S.icon+' '+S.name+'（'+b.rounds+' 轮 · '+b.n+' 题）</span><span>'+b.score+'/'+b.total+' · '+pct+'%</span></div><div class="track"><div class="fill" data-w="'+pct+'" style="background:'+S.hex+'"></div></div></div>';
+  });
+  var total=logs.reduce(function(a,x){return a+x.n;},0);
+  var starsToday=logs.reduce(function(a,x){return a+x.score;},0);
+  html+='<div class="repnote">今天共完成 <b>'+total+'</b> 题，赢得 <b>'+starsToday+'</b> ⭐';
+  if(best&&weak&&best.k!==weak.k)html+='；最强的是 <b>'+SUBJ[best.k].name+'</b>（'+best.pct+'%），<b>'+SUBJ[weak.k].name+'</b>（'+weak.pct+'%）可以去错题闯关加强哦';
+  html+='！'+(goalReached()?' 今日任务达成 ✅，奖励游戏已解锁！':' 完成 '+GOAL+' 题解锁奖励游戏🎮。')+'</div></div>';
+  area.innerHTML=html;
+  setTimeout(function(){document.querySelectorAll('.rep .fill').forEach(function(f){f.style.width=f.dataset.w+'%';});},60);
+}
+
+/* ---------- reward game: star catcher ---------- */
+var G={running:false,score:0,time:30,items:[],timer:null,raf:null};
+function tryGame(){
+  if(!goalReached()){alert('先完成今日 '+GOAL+' 道题，就能解锁奖励游戏啦！💪');return;}
+  el('gameOverlay').style.display='grid';
+}
+function gameClose(){gameStop();el('gameOverlay').style.display='none';renderHome();}
+function gameStop(){G.running=false;clearInterval(G.timer);cancelAnimationFrame(G.raf);}
+function gameStart(){
+  gameStop();
+  G.running=true;G.score=0;G.time=30;G.items=[];
+  el('gScore').textContent=0;el('gTime').textContent=30;el('gBtn').textContent='重新开始';
+  var c=el('gameCanvas'),ctx=c.getContext('2d');
+  var spawn=setInterval(function(){
+    if(!G.running)return clearInterval(spawn);
+    G.items.push({x:30+Math.random()*(c.width-60),y:-20,v:1.6+Math.random()*2.2,bomb:Math.random()<0.22,r:22});
+  },520);
+  G.timer=setInterval(function(){
+    G.time--;el('gTime').textContent=G.time;
+    if(G.time<=0){gameStop();
+      var bonus=Math.max(0,Math.min(20,G.score));
+      DB.stars+=bonus;save();popStars();
+      ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,c.width,c.height);
+      ctx.fillStyle='#fff';ctx.font='bold 30px sans-serif';ctx.textAlign='center';
+      ctx.fillText('得分 '+G.score+'，奖励 +'+bonus+' ⭐',c.width/2,c.height/2);
+      bigBurst();
+    }
+  },1000);
+  function tap(e){
+    if(!G.running)return;e.preventDefault();
+    var r=c.getBoundingClientRect();
+    var pt=e.touches?e.touches[0]:e;
+    var x=(pt.clientX-r.left)*(c.width/r.width),y=(pt.clientY-r.top)*(c.height/r.height);
+    for(var i=G.items.length-1;i>=0;i--){
+      var it=G.items[i];
+      if(Math.hypot(it.x-x,it.y-y)<it.r+14){
+        G.score+=it.bomb?-2:1;if(G.score<0)G.score=0;
+        el('gScore').textContent=G.score;
+        G.items.splice(i,1);break;
+      }
+    }
+  }
+  c.onpointerdown=tap;
+  (function loop(){
+    if(!G.running)return;
+    ctx.clearRect(0,0,c.width,c.height);
+    ctx.font='34px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    G.items.forEach(function(it){it.y+=it.v;ctx.fillText(it.bomb?'💣':'⭐',it.x,it.y);});
+    G.items=G.items.filter(function(it){return it.y<c.height+30;});
+    G.raf=requestAnimationFrame(loop);
+  })();
+}
+
+/* ---------- backup ---------- */
+function exportData(){
+  var blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='yeyeyeye-progress.json';a.click();
+}
+function importData(inp){
+  var f=inp.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){try{DB=JSON.parse(r.result);save();renderHome();alert('导入成功！');}catch(e){alert('文件无法读取，请选择本应用导出的 JSON 文件。');}};
+  r.readAsText(f);
+}
+
+/* ---------- boot ---------- */
+['en','ma','sc','cl'].forEach(renderSubject);
+renderHome();
+</script>
+</body>
+</html>
